@@ -6,7 +6,6 @@ project:
 
 website:
   title: "Sequence Paper"
-
   page-footer:
     right: ""
     left: ""
@@ -19,7 +18,4 @@ format:
     code-copy: true
     code-overflow: wrap
     toc: true
-
-
-
-
+    code-fold: true  # Add this line to enable code folding

@@ -46,6 +46,11 @@ sidebar: true
 ```{r loadlibraries, include = FALSE, warning=FALSE}
 
 # For data management
+if (!require('knitr')) install.packages('knitr'); library('knitr')
+if (!require('rmarkdown')) install.packages('rmarkdown'); library('rmarkdown')
+
+
+# For data management
 if (!require('dplyr')) install.packages('dplyr'); library('dplyr')
 
 #for reading in data
@@ -426,19 +431,38 @@ tract_clusters_2020 <- tract_clusters_2020 %>%
                                   "cluster_6" = "Six Clusters")) %>%
     mutate(ClusterSolution = factor(ClusterSolution, levels = c("Four Clusters", "Five Clusters", "Six Clusters")))
 
-# Plot the faceted maps for 2020 clusters
-ggplot(tract_clusters_2020) +
+
+# Plot with adjusted legend where the numbers appear inside the boxes
+# Create the base plot without legend text
+base_plot <- ggplot(tract_clusters_2020) +
   geom_sf(aes(fill = factor(Cluster)), color = NA) +  # Use factor to ensure proper color assignment
   facet_wrap(~ ClusterSolution, ncol = 3) +  # Facet by clustering solution (Four, Five, Six Clusters)
-  scale_fill_brewer(palette = "Set3", name = "Cluster") +  # Same color palette as used in the bar graphs
+  scale_fill_brewer(palette = "Set3", name = "Cluster") +  # Use Set3 color palette
   labs(title = "Cluster Solutions for 4, 5, and 6 Clusters (2020)", x = "", y = "") +
   theme_void() +
-  theme(legend.position = "bottom",
-        legend.direction = "horizontal",
-        legend.title = element_text(size=10),
-        legend.key.width = unit(2, "cm"))
+  theme(
+    legend.position = "none", # Hide the default legend
+    plot.title = element_text(hjust = 0.5)
+  )
 
+# Create a custom legend manually
+legend_data <- data.frame(
+  Cluster = factor(1:6),  # Cluster numbers
+  x = 1:6,                # X position for text labels
+  y = rep(1, 6)           # Y position for text labels
+)
 
+# Create a custom legend manually with smaller boxes
+legend_plot <- ggplot(legend_data) +
+  geom_tile(aes(x = x, y = y, fill = Cluster), width = 0.7, height = 0.15) +  # Adjust width and height for smaller boxes
+  geom_text(aes(x = x, y = y, label = Cluster), color = "white", size = 4) +  # Adjust text size to fit smaller boxes
+  scale_fill_brewer(palette = "Set3") +  # Same color palette as the map
+  theme_void() +
+  theme(legend.position = "none") +
+  coord_fixed(ratio = 2)  # Adjust aspect ratio for better spacing of the boxes
+
+# Arrange the plot and custom legend
+grid.arrange(base_plot, legend_plot, nrow = 2, heights = c(4, 0.8))  # Adjust heights as needed for better balance
 ```
   
 
