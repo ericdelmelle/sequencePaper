@@ -18,4 +18,8 @@ format:
     code-copy: true
     code-overflow: wrap
     toc: true
-    code-fold: true  # Add this line to enable code folding
+    code-fold: true
+
+execute:
+  echo: true
+  cache: false
