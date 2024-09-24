@@ -91,7 +91,6 @@ if (!require('TraMineR')) install.packages('TraMineR'); library('TraMineR')
 
 # For k-means and hierarchical cluster analysis
 if (!require('cluster')) install.packages('cluster'); library('cluster')
-if (!require('ROCR')) install.packages('ROCR'); library('ROCR')
 
 #For visualizing k-means outputs
 if (!require('factoextra')) install.packages('factoextra'); library('factoextra')
@@ -229,11 +228,9 @@ print(nyc_counties)
 
 ### Study Area
 
-  Our study area consists of census tracts within the five Boroughs of New York (see Figure \@ref(fig:nyc-plot) for an overview map).
+  Our study area consists of census tracts within the five Boroughs of New York (see Figure below for an overview map).
  
-```{r visualize-area, warning=FALSE, cache=TRUE, message=FALSE, fig.width=10, fig.height=8}
-#| label: nyc-plot
-#| fig-cap: "Overview map of New York City's five boroughs and surrounding counties."
+```{r visualize-area, warning=FALSE, cache=TRUE, message=FALSE, fig.cap="Overview map of New York City's five boroughs and surrounding counties", fig.width=10, fig.height=8}
 
 # Filter for only the New York City counties
 nyc_counties <- ny_counties %>%
@@ -348,7 +345,7 @@ data_for_clustering <- census_long %>%
   select(white, black, hisp, asian)
 ```
 
-  As explained above, the *k*-means clustering procedure requires that the number of clusters, *k* be specified *a priori*. There are fit statistics that attempt to determine the optimal number of clusters, considering the similarity of observations within each cluster and the distinctiveness of the clusters from each other. However, these mathematically-derived solutions are devoid of any contextual or theoretical understanding of the problem under study. Therefore, the selection of *k* often becomes more akin to art than a science [@von2012clustering], considering the objective of the study. We begin with two common data-driven approaches that explore multiple clustering solutions for different *k* values and then examines the *within sum of squares* (WSS) and the *average silhouette score* for each solution. The WSS assesses how compact a clustering solution is, or how homogeneous the observations assigned to each cluster are, and the average silhouette score measures how well separated each cluster is from each other. Our objective is to derive a typology of neighborhoods according to their racial and ethnic makeup, for four groups: percent White, Black, Hispanic, and Asian. Figure \@ref(fig:clustering-analysis) shows the results of the clustering analysis: (a) the Elbow method plot suggests the optimal number of clusters, and (b) the Silhouette method plot helps validate the cluster separation.
+  As explained above, the *k*-means clustering procedure requires that the number of clusters, *k* be specified *a priori*. There are fit statistics that attempt to determine the optimal number of clusters, considering the similarity of observations within each cluster and the distinctiveness of the clusters from each other. However, these mathematically-derived solutions are devoid of any contextual or theoretical understanding of the problem under study. Therefore, the selection of *k* often becomes more akin to art than a science [@von2012clustering], considering the objective of the study. We begin with two common data-driven approaches that explore multiple clustering solutions for different *k* values and then examines the *within sum of squares* (WSS) and the *average silhouette score* for each solution. The WSS assesses how compact a clustering solution is, or how homogeneous the observations assigned to each cluster are, and the average silhouette score measures how well separated each cluster is from each other. Our objective is to derive a typology of neighborhoods according to their racial and ethnic makeup, for four groups: percent White, Black, Hispanic, and Asian. The Figure below shows the results of the clustering analysis: (a) the Elbow method plot suggests the optimal number of clusters, and (b) the Silhouette method plot helps validate the cluster separation.
 
 ```{r kmeans1, warning=FALSE, cache=TRUE, message=FALSE, fig.show='hold', fig.cap="Clustering Analysis: (a) Elbow method plot, (b) Silhouette method plot.", fig.subcap=c("(a) Elbow method plot", "(b) Silhouette method plot"), fig.label='clustering-analysis'}
 # Now do the k-means clustering on all
@@ -377,7 +374,7 @@ fviz_nbclust(data_for_clustering, kmeans, method = "silhouette")
 
 ### Exploring *k*-means Cluster Solutions
 
-  According to these plots, the mathematically optimal number of neighborhood clusters for racial makeup is three. We can further explore the makeup of neighborhoods within these three clusters a few ways to determine if, in fact, three clusters provides a meaningful segmentation of four distinct racial and ethnic groups. In the plots below, we can visualize the average silhouette value for each cluster. The *Silhouette* values range from -1 to 1; values close to 1 suggest that the observations are well clustered while negative values suggest that an observation might be assigned to the wrong cluster. From the plot, Clusters 2 and 3 appears to be the most cohesive clusters, with average silhouette widths of 0.64, while cluster 1 has some potentially poorly classified neighborhoods. Descriptions of the racial and ethnic makeup of the clusters are obtained from the associated stacked bar charts. We can see that Cluster 1 is characterized as being nearly 50 percent Hispanic, with near equal shares of Whites, Blacks, and Asians. Cluster 2 is majority Black with approximately 15 percent Hispanics and few Whites and Asians. Finally, Cluster 3 is majority White. Therefore, this segmentation provides us with clusters indicating the dominant racial groups, but may miss some nuances of other racial and ethnic neighborhood compositions. We can therefore explore how increasing *k* may portray a richer portrait of neighborhood demographic profiles. Figure \@ref(fig:three-clusters) shows the cluster analysis results, with (a) illustrating the Silhouette Analysis to assess cluster separation, and (b) depicting the demographic makeup of the three clusters.
+  According to these plots, the mathematically optimal number of neighborhood clusters for racial makeup is three. We can further explore the makeup of neighborhoods within these three clusters a few ways to determine if, in fact, three clusters provides a meaningful segmentation of four distinct racial and ethnic groups. In the plots below, we can visualize the average silhouette value for each cluster. The *Silhouette* values range from -1 to 1; values close to 1 suggest that the observations are well clustered while negative values suggest that an observation might be assigned to the wrong cluster. From the plot, Clusters 2 and 3 appears to be the most cohesive clusters, with average silhouette widths of 0.64, while cluster 1 has some potentially poorly classified neighborhoods. Descriptions of the racial and ethnic makeup of the clusters are obtained from the associated stacked bar charts. We can see that Cluster 1 is characterized as being nearly 50 percent Hispanic, with near equal shares of Whites, Blacks, and Asians. Cluster 2 is majority Black with approximately 15 percent Hispanics and few Whites and Asians. Finally, Cluster 3 is majority White. Therefore, this segmentation provides us with clusters indicating the dominant racial groups, but may miss some nuances of other racial and ethnic neighborhood compositions. We can therefore explore how increasing *k* may portray a richer portrait of neighborhood demographic profiles. In the Figure below, (a) illustrates the Silhouette Analysis to assess cluster separation, and (b) depicts the demographic makeup of the three clusters.
 
 ```{r threeclusters, warning=FALSE, cache=TRUE, message=FALSE, fig.show='hold', fig.cap="Cluster Analysis Results: (a) Silhouette Analysis and (b) Cluster Demographic Makeup.", fig.subcap=c("(a) Silhouette Analysis", "(b) Cluster Demographic Makeup"), fig.label='three-clusters'}
 # Assume the optimal number of clusters (k) is 3 from the previous steps
@@ -418,7 +415,7 @@ ggplot(cluster_profiles_long, aes(x = factor(cluster), y = Proportion, fill = De
   theme_minimal()
 ```
 
-  Next, we compare 4,5,and 6 cluster solutions. We can see that the average silhouette of the solutions declines as the number of clusters increases. The demographic profiles show several new neighborhood typologies emerge with more clusters added. With a four cluster solution, we observe neighborhood typologies for each of the three dominant racial and ethic groups: White, Hispanic, and Black along with one mixed neighborhood type, shown in cluster 4. As expected, that cluster displays the lowest silhouette value, with some potentially mis-classified neighborhoods. The 5 cluster solution adds a cluster showing a majority Asian population, alongside two majority White populations - one showing more diversity than the other), and a majority Black, and Hispanic group. Finally, a 6 cluster solution shows more racially mixed groups, but at the expense of less well-defined or separated clusters. In the code below, each variable name ends with a number (4, 5 or 6), indicating which number of clusters (k) it represents. Figure \@ref(fig:silhouette-analysis) displays the silhouette analysis results for clustering into (a) four clusters, (b) five clusters, and (c) six clusters, illustrating the cohesion and separation of clusters at different sizes.
+  Next, we compare 4, 5, and 6 cluster solutions. We can see that the average silhouette of the solutions declines as the number of clusters increases. The demographic profiles show several new neighborhood typologies emerge with more clusters added. With a four cluster solution, we observe neighborhood typologies for each of the three dominant racial and ethic groups: White, Hispanic, and Black along with one mixed neighborhood type, shown in cluster 4. As expected, that cluster displays the lowest silhouette value, with some potentially mis-classified neighborhoods. The 5 cluster solution adds a cluster showing a majority Asian population, alongside two majority White populations - one showing more diversity than the other), and a majority Black, and Hispanic group. Finally, a 6 cluster solution shows more racially mixed groups, but at the expense of less well-defined or separated clusters. In the code below, each variable name ends with a number (4, 5 or 6), indicating which number of clusters (k) it represents. The results displays the silhouette analysis results for clustering into (a) four clusters, (b) five clusters, and (c) six clusters, illustrating the cohesion and separation of clusters at different sizes.
  
   
 ```{r silhouette-plots, warning=FALSE, cache=TRUE, message=FALSE, fig.show='hold', fig.cap="Silhouette Analysis for Different Cluster Sizes: (a) Four Clusters, (b) Five Clusters, and (c) Six Clusters.", fig.subcap=c("(a) Four Clusters", "(b) Five Clusters", "(c) Six Clusters"), fig.label='silhouette-analysis'}
@@ -451,7 +448,7 @@ plot_6 <- fviz_silhouette(sil_6) + ggtitle("Silhouette Plot - Six Clusters")
 grid.arrange(plot_4, plot_5, plot_6, ncol = 1)
 ```
 
-Figure \@ref(fig:demographic-makeup) illustrates the demographic composition of clusters for different clustering solutions: (a) four clusters, (b) five clusters, and (c) six clusters, highlighting how demographic groups are distributed across various cluster labels.
+The figure illustrates the demographic composition of clusters for different clustering solutions: (a) four clusters, (b) five clusters, and (c) six clusters, highlighting how demographic groups are distributed across various cluster labels.
 ```{r explore-demographics, warning=FALSE, cache=TRUE, message=FALSE, fig.show='hold', fig.cap="Demographic Makeup of Labeled Clusters for Different Clustering Solutions: (a) Four Clusters, (b) Five Clusters, and (c) Six Clusters.", fig.subcap=c("(a) Four Clusters", "(b) Five Clusters", "(c) Six Clusters"), fig.label='demographic-makeup'}
 # We need to hard code the labels to be able to compare the demographic profile of each solution. This is because R randomly assigns the label each time, even if the clustering solution is the same because we set the seed.
 label_clusters <- function(cluster_profiles) {
@@ -508,7 +505,7 @@ ggplot(cluster_profiles_long, aes(x = label, y = Proportion, fill = Demographic)
   facet_grid(Clustering_Solution ~ ., scales = "free_x") +  # Facet vertically by clustering solution
   scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
   labs(
-    title = "Demographic Makeup of Labeled Clusters in Different Clustering Solutions",
+    title = "",
     x = "Cluster Label",
     y = "Proportion of Demographic Group",
     fill = "Demographic Group"
@@ -527,7 +524,7 @@ ggplot(cluster_profiles_long, aes(x = label, y = Proportion, fill = Demographic)
   
   Finally, we can examine the spatial distribution of these clustering solutions to help aid in the final determination for the sequence analysis. Since we did the cluster analysis on all decades, for this purpose, we will contrast the 4, 5, and 6 cluster solutions just for 2020. All three maps depict a similar spatial pattern, but with a more fragmented pattern in the case of the 6 cluster solution. For example, the first two maps show contiguous tracts of the predominantly Black cluster, but the third map shows the emergence of the `Black and Hispanic` group largely forming on the outskirts of this spatial cluster. Another aparent distinction is the large spatial cluster of the `Asian` cluster in Queens, which had been labeled as `Mixed` in the 4 cluster solution.
   
-  To better understand details on racial neighborhood transitions, we will go with the larger number of clusters, 6, despite the mathematical preference for a 3 cluster solution. Figure \@ref(fig:demographic-distribution) shows the demographic distribution of labeled clusters for different clustering solutions: (a) four clusters, (b) five clusters, and (c) six clusters.
+  To better understand details on racial neighborhood transitions, we will go with the larger number of clusters, 6, despite the mathematical preference for a 3 cluster solution. Our result illustrates the demographic distribution of labeled clusters for different clustering solutions: (a) four clusters, (b) five clusters, and (c) six clusters.
   
   
 ```{r demographic-distribution, warning=FALSE, cache=TRUE, message=FALSE, fig.show='hold', fig.cap="Demographic Distribution of Labeled Clusters for Different Clustering Solutions: (a) Four Clusters, (b) Five Clusters, and (c) Six Clusters.", fig.subcap=c("(a) Four Clusters", "(b) Five Clusters", "(c) Six Clusters"), fig.label='demographic-distribution'}
@@ -553,17 +550,21 @@ base_plot <- ggplot(tract_clusters_2020) +
   geom_sf(aes(fill = Label), color = NA) +  # Use the Label field for fill
   geom_sf(data = nyc_counties, fill = NA, color = "black", size = 0.5) +  # Add county outlines
   facet_wrap(~ ClusterSolution, nrow = 1) +  # Facet horizontally by clustering solution
-  scale_fill_manual(values = c("3 White" = "#F0E442", "2 Hispanic" = "#D55E00", "1 Black" = "#0072B2",
-                               "5 Asian" = "#CC79A7", "4 Mixed" = "#009E73", "6 Black and Hispanic" = "#56B4E9")) +  # Custom colors for each label
-  labs(x = "", y = "") +  # Remove the title
+  scale_fill_manual(
+    values = c("3 White" = "#F0E442", "2 Hispanic" = "#D55E00", 
+               "1 Black" = "#0072B2", "5 Asian" = "#CC79A7", 
+               "4 Mixed" = "#009E73", "6 Black and Hispanic" = "#56B4E9"),
+    labels = c("Black", "Hispanic", "White", "Asian", "Mixed", "Black and Hispanic")  # Remove numbers from labels
+  ) +
+  labs(x = "", y = "", fill = NULL) +  # Remove the title and set fill to NULL to remove "Label"
   theme_void() +
   theme(
     strip.text = element_text(hjust = .5, vjust = .1, face = "italic", size = 12),  # Center facet labels
     legend.position = "bottom",  # Place the legend at the bottom
-    legend.title = element_text(size = 10),
+    legend.title = element_blank(),  # Ensure legend title is blank
     legend.text = element_text(size = 8)
   ) +
-  guides(fill = guide_legend(nrow = 1, byrow = TRUE))  # Combine all legend entries into a single row
+  guides(fill = guide_legend(nrow = 1, byrow = TRUE, label.position = "bottom"))  # Place category names under the boxes
 
 # Display the plot
 grid.arrange(base_plot)
@@ -593,23 +594,31 @@ ggplot(tract_clusters_decades) +
   geom_sf(aes(fill = label_6), color = NA) +  # Use factor to ensure proper color assignment
   geom_sf(data = nyc_counties, fill = NA, color = "black", size = 0.5) +  # Add county outlines
   facet_wrap(~ year, ncol = 5) +  # Facet by year with 5 columns
-  scale_fill_manual(values = c("3 White" = "#F0E442", "2 Hispanic" = "#D55E00", "1 Black" = "#0072B2",
-                               "5 Asian" = "#CC79A7", "4 Mixed" = "#009E73", "6 Black and Hispanic" = "#56B4E9"),
-                    name = "") +  # Add a name for the legend
-  labs(title = "6-Cluster Solution for Each Decade", x = "", y = "") +
+  scale_fill_manual(
+    values = c("3 White" = "#F0E442", "2 Hispanic" = "#D55E00", "1 Black" = "#0072B2",
+               "5 Asian" = "#CC79A7", "4 Mixed" = "#009E73", "6 Black and Hispanic" = "#56B4E9"),
+    labels = c("Black", "Hispanic", "White", "Asian", "Mixed", "Black and Hispanic"),  # Remove numbers from labels
+    name = ""  # Remove legend title
+  ) +
+  labs(title = " ", x = "", y = "") +
   theme_void() +
   theme(
     plot.title = element_text(hjust = 0, color = "gray"),  # Set the title color to gray
     legend.position = "bottom",  # Move legend to the bottom
     legend.direction = "horizontal",  # Make the legend horizontal
-    legend.title = element_text(size = 10),  # Adjust legend title size
+    legend.title = element_blank(),  # Ensure the legend title is blank
     legend.key.size = unit(0.6, "cm"),  # Set consistent size for legend boxes
     legend.key.height = unit(0.6, "cm"),  # Set consistent height for legend boxes
     legend.key.width = unit(0.5, "cm")  # Set consistent width for legend boxes
   ) +
-  guides(fill = guide_legend(nrow = 1, byrow = TRUE)) 
+  guides(
+    fill = guide_legend(
+      nrow = 1, byrow = TRUE, label.position = "bottom"  # Place category names under the legend boxes
+    )
+  )  # Combine all legend entries into a single row
 
-
+# Display the plot
+grid.arrange(base_plot)
 ```
 
 ### Sequence Analysis
@@ -741,9 +750,6 @@ plot_sequence_clusters(7:8)
 plot_sequence_clusters(9:10)
 plot_sequence_clusters(11:12)
 plot_sequence_clusters(13:14)
-
-
-
 ```
 
    Of these 14 pathways, there are 3 that lead to the formation of a neighborhood transitioning into a Hispanic Majority cluster by 2020. This includes Cluster 3 - showing neighborhoods that went from being a slight majority White, but with a mixture of other races in 1980 and 1990 to transitioning to majority Hispanic by 1990 or 2000. Some of these sequences indicate a continued transition towards becoming majority Asian in the later years. Further segmenting the sequences into more clusters may have separated out those trajectories, but for the sake of brevity, we leave them mixed in. Spatially, these are shown in orange on the map below and can be see clustered in Staten Island, Queens, and in the Northern portion of the city. They are also notably adjacent to neighborhoods indicated by the red color, those representing sequence cluster 4, transitioning from majority White to White and Mixed Race and then to Majority Hispanic. This latter cluster might represent the precursor to cluster 3, but are neighborhoods that made this transition from majority White later, where the changes took time to spatially spillover to adjacent neighborhoods, as indicated by the map. Both of these pathways depict a transition from largely White populations to largely Hispanic.
@@ -771,7 +777,7 @@ ggplot(tract_hispanic_majority) +
                                "5 Black - Black & Hispanic - Hispanic", 
                                "4 White, Mixed Race - Hispanic"), 
                     name = "Hispanic Majority Pathway") +
-  labs(title = "Neighborhoods Following Pathway to Hispanic Majority", 
+  labs(title = "", 
        x = "", y = "") +
   theme_void() +
   theme(legend.position = "right",  # Place legend on the right
@@ -785,7 +791,7 @@ ggplot(tract_hispanic_majority) +
 
 
 
-```{r AsianPathways, echo=FALSE, warning=FALSE, message=FALSE}
+```{r AsianPathways, fig.cap="Neighborhoods Following Pathway to Asian Majority", echo=FALSE, warning=FALSE, message=FALSE}
 # Filter census data to include only clusters 14, 12, and 9 (Asian Majority Pathway clusters)
 asian_majority_clusters <- census_wide %>%
   filter(sequence_cluster %in% c(14, 12, 9))  
@@ -803,7 +809,7 @@ ggplot(tract_asian_majority) +
                                "12 White Majority to White Mixed Race to Asian", 
                                "9 White Mixed Race to Asian"), 
                     name = "Asian Majority Pathway") +
-  labs(title = "Neighborhoods Following Pathway to Asian Majority", 
+  labs(title = "", 
        x = "", y = "") +
   theme_void() +
   theme(legend.position = "right",  # Place legend at the bottom
@@ -812,16 +818,10 @@ ggplot(tract_asian_majority) +
         legend.key.width = unit(2, "cm"),  # Adjust legend key width
         legend.box = "vertical")  # Place legend title on top of the legend
 ```
-  
-
-  There are two pathways for increasing both Black and White shares in a neighborhoods. Neighborhoods that became increasingly White either followed a trajectory from White mixed race to majority White (Cluster 10) or from either all Black or Black and Hispanic to White and Mixed race (11). Notably, this transition largely took place within the past 1-2 decades, aligning with when gentrification trends became accentuated in some cities, including New York. We see a clear cluster of this latter group in Brooklyn, a borough whose gentrification trends have been well documented [@chronopoulos2020s; @halasz2023between]. 
-  
-  For the case of increasing Black populations, Cluster 1 shows a pathway from Hispanic majority to mixed Black and Hispanic and Cluster 8 shows a gradual transition from Black and Hispanic to majority Black; a trend that largely begin towards the middle of the study period, around the 2000 census data mark. Spatially, the former is more dispersed, while the latter is depicted more clearly in the southern neighborhoods of Brooklyn.
-  
-  
+ 
 ```{r whiteandblack}
 # Filter data for Increasing White (clusters 10 and 11)
-increasing_white_clusters <- census_wide %>%
+increasing_white_clusters <- census_wide %>% 
   filter(sequence_cluster %in% c(10, 11))  # Clusters 10 and 11 for increasing White
 
 # Filter data for Increasing Black (clusters 1 and 8)
@@ -829,16 +829,24 @@ increasing_black_clusters <- census_wide %>%
   filter(sequence_cluster %in% c(1, 8))  # Clusters 1 and 8 for increasing Black
 
 # Join the filtered data with the tract shapefile for each group
-tract_increasing_white <- tract %>%
+tract_increasing_white <- tract %>%  erase_water(area_threshold = 0.75) %>%
   left_join(increasing_white_clusters, by = "TRTID10")  # Join spatial data for increasing White
 
-tract_increasing_black <- tract %>% 
+tract_increasing_black <- tract %>%   erase_water(area_threshold = 0.75) %>%
   left_join(increasing_black_clusters, by = "TRTID10")  # Join spatial data for increasing Black
+```
 
+  There are two pathways for increasing both Black and White shares in a neighborhoods. Neighborhoods that became increasingly White either followed a trajectory from White mixed race to majority White (Cluster 10) or from either all Black or Black and Hispanic to White and Mixed race (11). Notably, this transition largely took place within the past 1-2 decades, aligning with when gentrification trends became accentuated in some cities, including New York. We see a clear cluster of this latter group in Brooklyn, a borough whose gentrification trends have been well documented [@chronopoulos2020s; @halasz2023between]. 
+  
+  For the case of increasing Black populations, Cluster 1 shows a pathway from Hispanic majority to mixed Black and Hispanic and Cluster 8 shows a gradual transition from Black and Hispanic to majority Black; a trend that largely begin towards the middle of the study period, around the 2000 census data mark. Spatially, the former is more dispersed, while the latter is depicted more clearly in the southern neighborhoods of Brooklyn.
+  
+  
+```{r WhitePathways, fig.cap="Neighborhoods Following Pathway to White Majority", echo=FALSE, warning=FALSE, message=FALSE}
 # Adjust plotting settings to improve map visibility
 # Create the map for Increasing White, zoomed in on the five boroughs
-map_increasing_white <- ggplot(tract_increasing_white) +
+ggplot(tract_increasing_white) +
   geom_sf(aes(fill = factor(sequence_cluster)), color = NA) +  # Map sequence clusters
+  geom_sf(data = nyc_counties, fill = NA, color = "black", size = 0.5) +  # Add white county borders
   scale_fill_manual(values = c("#8DD3C7", "#FFFFB3"),  # Custom color palette for White clusters
                     labels = c("White Mixed Race to Majority White", 
                                "Black and Hispanic to White Mixed Race"), 
@@ -850,10 +858,13 @@ map_increasing_white <- ggplot(tract_increasing_white) +
         legend.title = element_text(size = 12),  # Customize legend title size
         legend.key.width = unit(2, "cm"),
         legend.box = "vertical")  # Place legend title on top
+```
 
+```{r Black Pathways, fig.cap="Neighborhoods Following Pathway to Black Majority", echo=FALSE, warning=FALSE, message=FALSE}
 # Create the map for Increasing Black, zoomed in on the five boroughs
-map_increasing_black <- ggplot(tract_increasing_black) +
+ggplot(tract_increasing_black) +
   geom_sf(aes(fill = factor(sequence_cluster)), color = NA) +  # Map sequence clusters
+  geom_sf(data = nyc_counties, fill = NA, color = "black", size = 0.5) +  # Add white county borders
   scale_fill_manual(values = c("#FB8072", "#80B1D3"),  # Custom color palette for Black clusters
                     labels = c("Hispanic Majority to Black & Hispanic", 
                                "Black and Hispanic to Black Majority"), 
@@ -865,15 +876,6 @@ map_increasing_black <- ggplot(tract_increasing_black) +
         legend.title = element_text(size = 12),  # Customize legend title size
         legend.key.width = unit(2, "cm"),
         legend.box = "vertical")  # Place legend title on top
-
-# Combine the two maps side by side using patchwork
-combined_map <- map_increasing_white + map_increasing_black + plot_layout(ncol = 2)
-
-# Print the combined map with a larger viewing area
-print(combined_map)
-
-# Optional: Save the combined map with larger dimensions
-#ggsave("combined_map_zoomed.png", combined_map, width = 16, height = 8, dpi = 300)d_map_large.png", #combined_map, width = 16, height = 8, dpi = 300)
 
 ```
 
