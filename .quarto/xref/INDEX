@@ -13,8 +13,20 @@
   },
   "SequencePaperSep24.qmd": {
     "SequencePaperSep24.html": "48bf038e"
+<<<<<<< HEAD
   },
   "index.qmd": {
     "index.html": "9b2568c1"
+=======
+<<<<<<< HEAD
+=======
+  },
+  "test.qmd": {
+    "test.html": "cb86e3eb"
+  },
+  "Paper.qmd": {
+    "Paper.html": "24a3ff35"
+>>>>>>> 0bb5708df9c75a9e38caac62086374af26ebceae
+>>>>>>> ba3558bb26c5dbb753dc04b52e66098c019d1583
   }
 }
