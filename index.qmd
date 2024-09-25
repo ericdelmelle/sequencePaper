@@ -349,7 +349,7 @@ data_for_clustering <- census_long %>%
 
   As explained above, the *k*-means clustering procedure requires that the number of clusters, *k* be specified *a priori*. There are fit statistics that attempt to determine the optimal number of clusters, considering the similarity of observations within each cluster and the distinctiveness of the clusters from each other. However, these mathematically-derived solutions are devoid of any contextual or theoretical understanding of the problem under study. Therefore, the selection of *k* often becomes more akin to art than a science [@von2012clustering], considering the objective of the study. We begin with two common data-driven approaches that explore multiple clustering solutions for different *k* values and then examines the *within sum of squares* (WSS) and the *average silhouette score* for each solution. The WSS assesses how compact a clustering solution is, or how homogeneous the observations assigned to each cluster are, and the average silhouette score measures how well separated each cluster is from each other. Our objective is to derive a typology of neighborhoods according to their racial and ethnic makeup, for four groups: percent White, Black, Hispanic, and Asian. The Figure below shows the results of the clustering analysis; the Elbow method plot suggests the optimal number of clusters, while the Silhouette method plot helps validate the cluster separation.
 
-```{r kmeans1, warning=FALSE, cache=TRUE, message=FALSE, fig.show='hold', fig.cap="Clustering Analysis:  Elbow method plot (top), Silhouette method plot (bottom)", fig.label='clustering-analysis'}
+```{r kmeans1, warning=FALSE, cache=TRUE, message=FALSE, fig.show='hold', fig.label='clustering-analysis'}
 # Now do the k-means clustering on all
 
 data_for_clustering <- census_long %>%
@@ -420,7 +420,7 @@ ggplot(cluster_profiles_long, aes(x = factor(cluster), y = Proportion, fill = De
   Next, we compare 4, 5, and 6 cluster solutions. We can see that the average silhouette of the solutions declines as the number of clusters increases. The demographic profiles show several new neighborhood typologies emerge with more clusters added. With a four cluster solution, we observe neighborhood typologies for each of the three dominant racial and ethic groups: White, Hispanic, and Black along with one mixed neighborhood type, shown in cluster 4. As expected, that cluster displays the lowest silhouette value, with some potentially mis-classified neighborhoods. The 5 cluster solution adds a cluster showing a majority Asian population, alongside two majority White populations - one showing more diversity than the other), and a majority Black, and Hispanic group. Finally, a 6 cluster solution shows more racially mixed groups, but at the expense of less well-defined or separated clusters. In the code below, each variable name ends with a number (4, 5 or 6), indicating which number of clusters (k) it represents. The results displays the silhouette analysis results for clustering into (a) four clusters, (b) five clusters, and (c) six clusters, illustrating the cohesion and separation of clusters at different sizes.
  
   
-```{r silhouette-plots, warning=FALSE, cache=TRUE, message=FALSE, fig.show='hold', fig.cap="Silhouette Analysis for Different Cluster Sizes: (a) Four Clusters, (b) Five Clusters, and (c) Six Clusters.", fig.label='silhouette-analysis'}
+```{r silhouette-plots, warning=FALSE, cache=TRUE, message=FALSE, fig.show='hold', fig.cap="Silhouette Analysis for Different Cluster Sizes: (top) Four Clusters, (middle) Five Clusters, and (bottom) Six Clusters.", fig.label='silhouette-analysis'}
 # Perform k-means clustering for 4, 5, and 6 clusters
 set.seed(123)
 kmeans_4 <- kmeans(data_for_clustering, centers = 4, nstart = 25)
@@ -451,7 +451,7 @@ grid.arrange(plot_4, plot_5, plot_6, ncol = 1)
 ```
 
 The figure illustrates the demographic composition of clusters for different clustering solutions: (a) four clusters, (b) five clusters, and (c) six clusters, highlighting how demographic groups are distributed across various cluster labels.
-```{r explore-demographics, warning=FALSE, cache=TRUE, message=FALSE, fig.show='hold', fig.cap="Demographic Makeup of Labeled Clusters for Different Clustering Solutions: (a) Four Clusters, (b) Five Clusters, and (c) Six Clusters.", fig.subcap=c("(a) Four Clusters", "(b) Five Clusters", "(c) Six Clusters"), fig.label='demographic-makeup'}
+```{r explore-demographics, warning=FALSE, cache=TRUE, message=FALSE, fig.show='hold', fig.cap="Geographic variation of Labeled Clusters for Different Clustering Solutions.", fig.label='demographic-makeup'}
 # We need to hard code the labels to be able to compare the demographic profile of each solution. This is because R randomly assigns the label each time, even if the clustering solution is the same because we set the seed.
 label_clusters <- function(cluster_profiles) {
   cluster_profiles %>%
@@ -572,11 +572,9 @@ grid.arrange(base_plot)
   
   We can begin with a simple exploration of the spatial changes over time in the maps showing the six clusters from 1980-2020 in a series of small multiples. From these maps, we can pick out some general spatial patterns over time. For example, we can see the expanse of neighborhoods classified as majority White from 1980 significantly diminishes by 2020. The share of Hispanics is shown to increase over time in the northern sections of the City. Towards the East, we see neighborhoods generally transition from predominantly White in 1980 to White and Mixed Race and eventually to Asian by 2020. There are also some evident stable clusters. For instance, the two clusters of predominantly black neighborhoods in the South and Southeast appear quite table over time. However, the cluster of majority Black neighborhoods in towards the north of Manhattan is diminished, replaced by a Black and Hispanic classification.  
   
-```{r smallmultiples,warning=FALSE, cache=TRUE, message=FALSE}
-
+```{r smallmultiples,warning=FALSE, cache=TRUE, message=FALSE, fig.show='hold', fig.cap="Change in the cluster memmbership over five decades.", fig.label='clusterChange'}
 decades <- c(1980, 1990, 2000, 2010, 2020)
-
-
+  
 # Filter and prepare data for mapping
 tract_clusters_decades <- tract %>%
   left_join(census_long %>%
@@ -619,7 +617,7 @@ ggplot(tract_clusters_decades) +
 ### Sequence Analysis
  Our objective with the sequence classification is to come up with a typology of neighborhood sequences over time to describe general pathways of change. Each neighborhood has a sequence of classes over time, one of 6 categorical groups for each of the five decennial census values from 1980-2020. The first step in the analysis is to convert the data frame into a sequence for each neighborhood. We can see an illustrative example of the longitudinal sequences from the first five records. Classes are separated by a dash (-). There are 2122 sequences in the dataset and 197 unique sequences; all sequences are displayed in the plot below. Thus, the purpose of clustering the sequences is to extract the general patterns present from the set of all sequences.
   
-```{r createsequences, warning=FALSE, cache=TRUE, message=FALSE}
+```{r createsequences, warning=FALSE, cache=TRUE, message=FALSE, fig.cap="Sequence of each neighborhood."}
 # Convert the data from long to wide format to have a sequence for each neighborhood
 # Assuming census_long is your data frame
 census_wide <- tract_clusters_decades %>%
@@ -753,7 +751,6 @@ plot_sequence_clusters(13:14)
   From these two sets of sequence clusters, we can see that majority Hispanic neighborhoods in New York City have emerged out of either majority Black or Majority White neighborhoods over time. 
 
 ```{r my-figure, fig.cap="Neighborhoods Following Pathway to Hispanic Majority with White County Borders.", echo=FALSE, warning=FALSE, message=FALSE}
-
 # Define the Hispanic majority clusters for plotting
 hispanic_majority_clusters <- census_wide %>%
   filter(sequence_cluster %in% c(4, 5, 6))  # Filter clusters 4, 5, and 6

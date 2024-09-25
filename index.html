@@ -444,7 +444,7 @@ Geodetic CRS:  NAD83
 </details>
 </div>
 <p>As explained above, the <em>k</em>-means clustering procedure requires that the number of clusters, <em>k</em> be specified <em>a priori</em>. There are fit statistics that attempt to determine the optimal number of clusters, considering the similarity of observations within each cluster and the distinctiveness of the clusters from each other. However, these mathematically-derived solutions are devoid of any contextual or theoretical understanding of the problem under study. Therefore, the selection of <em>k</em> often becomes more akin to art than a science <span class="citation" data-cites="von2012clustering">(<a href="#ref-von2012clustering" role="doc-biblioref">Von Luxburg, Williamson, and Guyon 2012</a>)</span>, considering the objective of the study. We begin with two common data-driven approaches that explore multiple clustering solutions for different <em>k</em> values and then examines the <em>within sum of squares</em> (WSS) and the <em>average silhouette score</em> for each solution. The WSS assesses how compact a clustering solution is, or how homogeneous the observations assigned to each cluster are, and the average silhouette score measures how well separated each cluster is from each other. Our objective is to derive a typology of neighborhoods according to their racial and ethnic makeup, for four groups: percent White, Black, Hispanic, and Asian. The Figure below shows the results of the clustering analysis; the Elbow method plot suggests the optimal number of clusters, while the Silhouette method plot helps validate the cluster separation.</p>
-<div class="cell" data-fig.label="clustering-analysis" data-hash="index_cache/html/kmeans1_89c70c876423b21c6df1a3d7e78fbeeb">
+<div class="cell" data-fig.label="clustering-analysis" data-hash="index_cache/html/kmeans1_d9ae8a6d87b8a720f011cff72074aaac">
 <details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Now do the k-means clustering on all</span></span>
@@ -470,20 +470,10 @@ Geodetic CRS:  NAD83
 <span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_nbclust</span>(data_for_clustering, kmeans, <span class="at">method =</span> <span class="st">"silhouette"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="index_files/figure-html/kmeans1-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Clustering Analysis: Elbow method plot (top), Silhouette method plot (bottom)</figcaption>
-</figure>
-</div>
+<p><img src="index_files/figure-html/kmeans1-1.png" class="img-fluid" width="672"></p>
 </div>
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="index_files/figure-html/kmeans1-2.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Clustering Analysis: Elbow method plot (top), Silhouette method plot (bottom)</figcaption>
-</figure>
-</div>
+<p><img src="index_files/figure-html/kmeans1-2.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 </section>
@@ -596,7 +586,7 @@ Geodetic CRS:  NAD83
 </div>
 </div>
 <p>Next, we compare 4, 5, and 6 cluster solutions. We can see that the average silhouette of the solutions declines as the number of clusters increases. The demographic profiles show several new neighborhood typologies emerge with more clusters added. With a four cluster solution, we observe neighborhood typologies for each of the three dominant racial and ethic groups: White, Hispanic, and Black along with one mixed neighborhood type, shown in cluster 4. As expected, that cluster displays the lowest silhouette value, with some potentially mis-classified neighborhoods. The 5 cluster solution adds a cluster showing a majority Asian population, alongside two majority White populations - one showing more diversity than the other), and a majority Black, and Hispanic group. Finally, a 6 cluster solution shows more racially mixed groups, but at the expense of less well-defined or separated clusters. In the code below, each variable name ends with a number (4, 5 or 6), indicating which number of clusters (k) it represents. The results displays the silhouette analysis results for clustering into (a) four clusters, (b) five clusters, and (c) six clusters, illustrating the cohesion and separation of clusters at different sizes.</p>
-<div class="cell" data-fig.label="silhouette-analysis" data-hash="index_cache/html/silhouette-plots_c6799d54ab55804261979be0c7153104">
+<div class="cell" data-fig.label="silhouette-analysis" data-hash="index_cache/html/silhouette-plots_cdc7ca9c2992a0193c731d48292d96f0">
 <details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Perform k-means clustering for 4, 5, and 6 clusters</span></span>
@@ -661,13 +651,13 @@ Geodetic CRS:  NAD83
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="index_files/figure-html/silhouette-plots-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Silhouette Analysis for Different Cluster Sizes: (a) Four Clusters, (b) Five Clusters, and (c) Six Clusters.</figcaption>
+<figcaption class="figure-caption">Silhouette Analysis for Different Cluster Sizes: (top) Four Clusters, (middle) Five Clusters, and (bottom) Six Clusters.</figcaption>
 </figure>
 </div>
 </div>
 </div>
 <p>The figure illustrates the demographic composition of clusters for different clustering solutions: (a) four clusters, (b) five clusters, and (c) six clusters, highlighting how demographic groups are distributed across various cluster labels.</p>
-<div class="cell" data-fig.label="demographic-makeup" data-hash="index_cache/html/explore-demographics_2412e893a3c17e60721b35efdc79e0e2">
+<div class="cell" data-fig.label="demographic-makeup" data-hash="index_cache/html/explore-demographics_4ba6bb42483ff2d084ede4cba94a2bd0">
 <details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># We need to hard code the labels to be able to compare the demographic profile of each solution. This is because R randomly assigns the label each time, even if the clustering solution is the same because we set the seed.</span></span>
@@ -740,11 +730,10 @@ Geodetic CRS:  NAD83
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="index_files/figure-html/explore-demographics-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">(a) Four Clusters</figcaption>
+<figcaption class="figure-caption">Geographic variation of Labeled Clusters for Different Clustering Solutions.</figcaption>
 </figure>
 </div>
 </div>
-<p>Demographic Makeup of Labeled Clusters for Different Clustering Solutions: (a) Four Clusters, (b) Five Clusters, and (c) Six Clusters.</p>
 </div>
 <p>We can explore how this plays out for a specific observation. For example, take the first census tract in the data frame for the year <code>2020</code>. This tract’s racial composition was <code>58%</code> Black and <code>30%</code> Hispanic with small shares of Whites and Asians. With the four cluster solution, this tract was classified into class 1, <code>Majority Black</code>. For the five cluster solution, it was also classified as <code>Majority Black</code>, and for the six cluster solution, <code>Black and Hispanic</code>. In 1990, that same tract was <code>34%</code> black and <code>61%</code> Hispanic, resulting in the tract being classified as <code>Majority Hispanic</code> by all three clustering solutions. When looking at change over time, the neighborhood will either be registered as transitioning from <code>Majority Hispanic</code> to either <code>Majority Black</code> or <code>Black and Hispanic</code>, depending on the final cluster solution. In this instance, the 6 cluster solution provides a more accurate portrayal of the dynamics - while the neighborhood did technically become majority Black, there is still a significant Hispanic presence, a detail that would have been omitted by limiting the number of groups.</p>
 <p>Finally, we can examine the spatial distribution of these clustering solutions to help aid in the final determination for the sequence analysis. Since we did the cluster analysis on all decades, for this purpose, we will contrast the 4, 5, and 6 cluster solutions just for 2020. All three maps depict a similar spatial pattern, but with a more fragmented pattern in the case of the 6 cluster solution. For example, the first two maps show contiguous tracts of the predominantly Black cluster, but the third map shows the emergence of the <code>Black and Hispanic</code> group largely forming on the outskirts of this spatial cluster. Another aparent distinction is the large spatial cluster of the <code>Asian</code> cluster in Queens, which had been labeled as <code>Mixed</code> in the 4 cluster solution.</p>
@@ -803,59 +792,63 @@ Geodetic CRS:  NAD83
 </div>
 </div>
 <p>We can begin with a simple exploration of the spatial changes over time in the maps showing the six clusters from 1980-2020 in a series of small multiples. From these maps, we can pick out some general spatial patterns over time. For example, we can see the expanse of neighborhoods classified as majority White from 1980 significantly diminishes by 2020. The share of Hispanics is shown to increase over time in the northern sections of the City. Towards the East, we see neighborhoods generally transition from predominantly White in 1980 to White and Mixed Race and eventually to Asian by 2020. There are also some evident stable clusters. For instance, the two clusters of predominantly black neighborhoods in the South and Southeast appear quite table over time. However, the cluster of majority Black neighborhoods in towards the north of Manhattan is diminished, replaced by a Black and Hispanic classification.</p>
-<div class="cell" data-hash="index_cache/html/smallmultiples_8a5d990e257e633370a0382be1b4e2e9">
+<div class="cell" data-fig.label="clusterChange" data-hash="index_cache/html/smallmultiples_d68a378796315a5681ccb227a7cdc794">
 <details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>decades <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1980</span>, <span class="dv">1990</span>, <span class="dv">2000</span>, <span class="dv">2010</span>, <span class="dv">2020</span>)</span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter and prepare data for mapping</span></span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>tract_clusters_decades <span class="ot">&lt;-</span> tract <span class="sc">%&gt;%</span></span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(census_long <span class="sc">%&gt;%</span></span>
-<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>              <span class="fu">select</span>(TRTID10, year, label_6), <span class="at">by =</span> <span class="st">"TRTID10"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(label_6)) </span>
-<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Set factor levels for year to ensure proper ordering</span></span>
-<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>tract_clusters_decades <span class="ot">&lt;-</span> tract_clusters_decades <span class="sc">%&gt;%</span></span>
-<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">year =</span> <span class="fu">factor</span>(year, <span class="at">levels =</span> decades))</span>
-<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot faceted maps for each decade (year)</span></span>
-<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(tract_clusters_decades) <span class="sc">+</span></span>
-<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="fu">aes</span>(<span class="at">fill =</span> label_6), <span class="at">color =</span> <span class="cn">NA</span>) <span class="sc">+</span>  <span class="co"># Use factor to ensure proper color assignment</span></span>
-<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">data =</span> nyc_counties, <span class="at">fill =</span> <span class="cn">NA</span>, <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">size =</span> <span class="fl">0.5</span>) <span class="sc">+</span>  <span class="co"># Add county outlines</span></span>
-<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> year, <span class="at">ncol =</span> <span class="dv">5</span>) <span class="sc">+</span>  <span class="co"># Facet by year with 5 columns</span></span>
-<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(</span>
-<span id="cb21-20"><a href="#cb21-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"3 White"</span> <span class="ot">=</span> <span class="st">"#F0E442"</span>, <span class="st">"2 Hispanic"</span> <span class="ot">=</span> <span class="st">"#D55E00"</span>, <span class="st">"1 Black"</span> <span class="ot">=</span> <span class="st">"#0072B2"</span>,</span>
-<span id="cb21-21"><a href="#cb21-21" aria-hidden="true" tabindex="-1"></a>               <span class="st">"5 Asian"</span> <span class="ot">=</span> <span class="st">"#CC79A7"</span>, <span class="st">"4 Mixed"</span> <span class="ot">=</span> <span class="st">"#009E73"</span>, <span class="st">"6 Black and Hispanic"</span> <span class="ot">=</span> <span class="st">"#56B4E9"</span>),</span>
-<span id="cb21-22"><a href="#cb21-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Black"</span>, <span class="st">"Hispanic"</span>, <span class="st">"White"</span>, <span class="st">"Asian"</span>, <span class="st">"Mixed"</span>, <span class="st">"Black and Hispanic"</span>),  <span class="co"># Remove numbers from labels</span></span>
-<span id="cb21-23"><a href="#cb21-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> <span class="st">""</span>  <span class="co"># Remove legend title</span></span>
-<span id="cb21-24"><a href="#cb21-24" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb21-25"><a href="#cb21-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">" "</span>, <span class="at">x =</span> <span class="st">""</span>, <span class="at">y =</span> <span class="st">""</span>) <span class="sc">+</span></span>
-<span id="cb21-26"><a href="#cb21-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_void</span>() <span class="sc">+</span></span>
-<span id="cb21-27"><a href="#cb21-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
-<span id="cb21-28"><a href="#cb21-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="dv">0</span>, <span class="at">color =</span> <span class="st">"gray"</span>),  <span class="co"># Set the title color to gray</span></span>
-<span id="cb21-29"><a href="#cb21-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"bottom"</span>,  <span class="co"># Move legend to the bottom</span></span>
-<span id="cb21-30"><a href="#cb21-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.direction =</span> <span class="st">"horizontal"</span>,  <span class="co"># Make the legend horizontal</span></span>
-<span id="cb21-31"><a href="#cb21-31" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.title =</span> <span class="fu">element_blank</span>(),  <span class="co"># Ensure the legend title is blank</span></span>
-<span id="cb21-32"><a href="#cb21-32" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.key.size =</span> <span class="fu">unit</span>(<span class="fl">0.6</span>, <span class="st">"cm"</span>),  <span class="co"># Set consistent size for legend boxes</span></span>
-<span id="cb21-33"><a href="#cb21-33" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.key.height =</span> <span class="fu">unit</span>(<span class="fl">0.6</span>, <span class="st">"cm"</span>),  <span class="co"># Set consistent height for legend boxes</span></span>
-<span id="cb21-34"><a href="#cb21-34" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.key.width =</span> <span class="fu">unit</span>(<span class="fl">0.5</span>, <span class="st">"cm"</span>)  <span class="co"># Set consistent width for legend boxes</span></span>
-<span id="cb21-35"><a href="#cb21-35" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb21-36"><a href="#cb21-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(</span>
-<span id="cb21-37"><a href="#cb21-37" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="fu">guide_legend</span>(</span>
-<span id="cb21-38"><a href="#cb21-38" aria-hidden="true" tabindex="-1"></a>      <span class="at">nrow =</span> <span class="dv">1</span>, <span class="at">byrow =</span> <span class="cn">TRUE</span>, <span class="at">label.position =</span> <span class="st">"bottom"</span>  <span class="co"># Place category names under the legend boxes</span></span>
-<span id="cb21-39"><a href="#cb21-39" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb21-40"><a href="#cb21-40" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter and prepare data for mapping</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>tract_clusters_decades <span class="ot">&lt;-</span> tract <span class="sc">%&gt;%</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(census_long <span class="sc">%&gt;%</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>              <span class="fu">select</span>(TRTID10, year, label_6), <span class="at">by =</span> <span class="st">"TRTID10"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(label_6)) </span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Set factor levels for year to ensure proper ordering</span></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>tract_clusters_decades <span class="ot">&lt;-</span> tract_clusters_decades <span class="sc">%&gt;%</span></span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">year =</span> <span class="fu">factor</span>(year, <span class="at">levels =</span> decades))</span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot faceted maps for each decade (year)</span></span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(tract_clusters_decades) <span class="sc">+</span></span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="fu">aes</span>(<span class="at">fill =</span> label_6), <span class="at">color =</span> <span class="cn">NA</span>) <span class="sc">+</span>  <span class="co"># Use factor to ensure proper color assignment</span></span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">data =</span> nyc_counties, <span class="at">fill =</span> <span class="cn">NA</span>, <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">size =</span> <span class="fl">0.5</span>) <span class="sc">+</span>  <span class="co"># Add county outlines</span></span>
+<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> year, <span class="at">ncol =</span> <span class="dv">5</span>) <span class="sc">+</span>  <span class="co"># Facet by year with 5 columns</span></span>
+<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(</span>
+<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"3 White"</span> <span class="ot">=</span> <span class="st">"#F0E442"</span>, <span class="st">"2 Hispanic"</span> <span class="ot">=</span> <span class="st">"#D55E00"</span>, <span class="st">"1 Black"</span> <span class="ot">=</span> <span class="st">"#0072B2"</span>,</span>
+<span id="cb21-20"><a href="#cb21-20" aria-hidden="true" tabindex="-1"></a>               <span class="st">"5 Asian"</span> <span class="ot">=</span> <span class="st">"#CC79A7"</span>, <span class="st">"4 Mixed"</span> <span class="ot">=</span> <span class="st">"#009E73"</span>, <span class="st">"6 Black and Hispanic"</span> <span class="ot">=</span> <span class="st">"#56B4E9"</span>),</span>
+<span id="cb21-21"><a href="#cb21-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Black"</span>, <span class="st">"Hispanic"</span>, <span class="st">"White"</span>, <span class="st">"Asian"</span>, <span class="st">"Mixed"</span>, <span class="st">"Black and Hispanic"</span>),  <span class="co"># Remove numbers from labels</span></span>
+<span id="cb21-22"><a href="#cb21-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> <span class="st">""</span>  <span class="co"># Remove legend title</span></span>
+<span id="cb21-23"><a href="#cb21-23" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb21-24"><a href="#cb21-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">" "</span>, <span class="at">x =</span> <span class="st">""</span>, <span class="at">y =</span> <span class="st">""</span>) <span class="sc">+</span></span>
+<span id="cb21-25"><a href="#cb21-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_void</span>() <span class="sc">+</span></span>
+<span id="cb21-26"><a href="#cb21-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb21-27"><a href="#cb21-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="dv">0</span>, <span class="at">color =</span> <span class="st">"gray"</span>),  <span class="co"># Set the title color to gray</span></span>
+<span id="cb21-28"><a href="#cb21-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"bottom"</span>,  <span class="co"># Move legend to the bottom</span></span>
+<span id="cb21-29"><a href="#cb21-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.direction =</span> <span class="st">"horizontal"</span>,  <span class="co"># Make the legend horizontal</span></span>
+<span id="cb21-30"><a href="#cb21-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.title =</span> <span class="fu">element_blank</span>(),  <span class="co"># Ensure the legend title is blank</span></span>
+<span id="cb21-31"><a href="#cb21-31" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.key.size =</span> <span class="fu">unit</span>(<span class="fl">0.6</span>, <span class="st">"cm"</span>),  <span class="co"># Set consistent size for legend boxes</span></span>
+<span id="cb21-32"><a href="#cb21-32" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.key.height =</span> <span class="fu">unit</span>(<span class="fl">0.6</span>, <span class="st">"cm"</span>),  <span class="co"># Set consistent height for legend boxes</span></span>
+<span id="cb21-33"><a href="#cb21-33" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.key.width =</span> <span class="fu">unit</span>(<span class="fl">0.5</span>, <span class="st">"cm"</span>)  <span class="co"># Set consistent width for legend boxes</span></span>
+<span id="cb21-34"><a href="#cb21-34" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb21-35"><a href="#cb21-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(</span>
+<span id="cb21-36"><a href="#cb21-36" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="fu">guide_legend</span>(</span>
+<span id="cb21-37"><a href="#cb21-37" aria-hidden="true" tabindex="-1"></a>      <span class="at">nrow =</span> <span class="dv">1</span>, <span class="at">byrow =</span> <span class="cn">TRUE</span>, <span class="at">label.position =</span> <span class="st">"bottom"</span>  <span class="co"># Place category names under the legend boxes</span></span>
+<span id="cb21-38"><a href="#cb21-38" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb21-39"><a href="#cb21-39" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<p><img src="index_files/figure-html/smallmultiples-1.png" class="img-fluid" width="672"></p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="index_files/figure-html/smallmultiples-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Change in the cluster memmbership over five decades.</figcaption>
+</figure>
+</div>
 </div>
 </div>
 </section>
 <section id="sequence-analysis" class="level3">
 <h3 class="anchored" data-anchor-id="sequence-analysis">Sequence Analysis</h3>
 <p>Our objective with the sequence classification is to come up with a typology of neighborhood sequences over time to describe general pathways of change. Each neighborhood has a sequence of classes over time, one of 6 categorical groups for each of the five decennial census values from 1980-2020. The first step in the analysis is to convert the data frame into a sequence for each neighborhood. We can see an illustrative example of the longitudinal sequences from the first five records. Classes are separated by a dash (-). There are 2122 sequences in the dataset and 197 unique sequences; all sequences are displayed in the plot below. Thus, the purpose of clustering the sequences is to extract the general patterns present from the set of all sequences.</p>
-<div class="cell" data-hash="index_cache/html/createsequences_a22ec07a8cb90156fd3248ea37624742">
+<div class="cell" data-hash="index_cache/html/createsequences_d03bc54894ecb34ac9d84562ba8144a2">
 <details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert the data from long to wide format to have a sequence for each neighborhood</span></span>
@@ -939,7 +932,12 @@ Levels: 1 Black 2 Hispanic 3 White 4 Mixed 5 Asian 6 Black and Hispanic</code></
 <span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">main =</span> <span class="st">"Neighborhood Racial and Ethnic Trajectories"</span>) <span class="co"># Plot title</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<p><img src="index_files/figure-html/createsequences-1.png" class="img-fluid" width="672"></p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="index_files/figure-html/createsequences-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Sequence of each neighborhood.</figcaption>
+</figure>
+</div>
 </div>
 </div>
 <p>The next objective is to compute the dissimilarity between all sequences. As described previously, we use the OMstrans algorithm to preserve the ordering of events as we are most interested in describing how neighborhoods have generally transitioned over time. We set a low value (<code>0.1</code>) for the parameter <code>otto</code> in the <code>seqdist</code> command which is the origin-transition trade-off weight. This emphasizes the ordering of sequence states. We also set a high <code>indel</code> cost of <code>3</code>. Finally, substitution costs are a function of the transition rate <code>TRATE</code> between states. This places a lower cost on more frequent transitions.</p>
