@@ -1,0 +1,24 @@
+project:
+  type: website
+  output-dir: docs
+  preview:
+    port: 3333
+
+website:
+  title: "Sequence Paper"
+  page-footer:
+    right: ""
+    left: ""
+
+format:
+  html:
+    highlight-style: solarized
+    theme: cosmo
+    css: styles.css
+    code-copy: true
+    code-overflow: wrap
+    toc: true
+    code-fold: true 
+execute:
+  echo: true
+  cache: false
