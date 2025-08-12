@@ -9,30 +9,25 @@ author:
     email: delmelle@upenn.edu
   - name: Eric Delmelle
     affiliations:
-      - name: Lehigh University & Vrije Universiteit Brussels
+      - name: Vrije University Brussels
+        department: Geography
     orcid: 0000-0002-5117-2238
     email: delmelle@gmail.com
-date: "2025-07-23"
+date: "2024-09-16"
 abstract: |
   This paper demonstrates the application of sequence analysis to develop a typology of racial and ethnic trajectories in New York City neighborhoods from 1980 to 2020 using a reproducible R workflow. Our workflow begins with using an unsupervised classification method, k-means, at each decennial cross-section to derive 6 classes describing the racial and ethnic makeup of neighborhoods during the study period. These classes include four that depict a majority of Black, White, Hispanic, and Asian residents, and two mixed-race classes, Black and Hispanic, and a White majority with a mixture of other races. We then develop a sequence of classes for each census tract over the 5 decennial time stamps. Finally, we derive a longitudinal typology describing the predominant pathways of change using sequence analysis. This resulted in 14 distinct pathways including transitions to Hispanic and Asian majorities emerging from historically White or Black neighborhoods. The findings underscore the gradual nature of neighborhood racial transformations. Our approach is reproducible for researchers wanting to explore and visualize multidimensional neighborhood dynamics.
 keywords: [sequence analysis, neighborhood change, New York City]
 toc: true
 format:
-  html:
-    code-fold: true
+  pdf:
     toc: true
-    highlight-style: solarized
-    theme: cosmo
-    css: styles.css
-    code-copy: true
-    code-overflow: wrap
-execute:
-  echo: true
+    highlight-style: tango
+    documentclass: article
+    include-in-header: preamble.tex # Optional: add any LaTeX preamble settings if needed
 bibliography: "references.bib"
 editor_options: 
   markdown: 
     wrap: 72
-sidebar: true
 ---
 
 ## Introduction {#sec-intro}
@@ -49,10 +44,12 @@ analytical strategies used to study neighborhood trajectories,
 introducing new methods for visualizing and mapping longitudinal
 pathways of change for multiple dimensions [@Delmelle2022].
 
-In this article, we demonstrate one such technique, sequence analysis, in an illustrative, reproducible tutorial analyzing neighborhood change. We demonstrate the method using a case study of racial and ethnic changes in New York City census tracts from 1980-2020. While our focus is methodological, the empirical case study highlights the utility of sequence analysis in visualizing, detecting, and exploring longitudinal patterns of neighborhood changes.
-
-Since the 1980s, The United States' demographic profile has become
-increasingly diverse in the past several decades, driven by sustained immigration adn by the growing share of births to non-White populations, influencing demographic shifts in the overall population structure [@frey2022new]. Analyses following the release of the 2010 decennial
+In this article, we demonstrate one such technique, sequence analysis,
+to explore decennial neighborhood racial and ethnic changes in New York
+City from 1980-2020. The United States' demographic profile has become
+increasingly diverse in the past several decades, driven by immigration
+and growing natural birth rates of the non-White population
+[@frey2022new]. Analyses following the release of the 2010 decennial
 census showed that increasing national diversity resulted in differing
 neighborhood trajectories, largely contingent on the broader
 metropolitan context [@Terbeck2023; @Wright2014].
@@ -64,17 +61,20 @@ diversity categorization over time. For example, a neighborhood might
 transition from 'low diverse' to 'moderately diverse' from one decade to
 the next [@farrell2011racial; @Wright2014]. Alternately, another set of
 techniques aims to describe the longitudinal sequences or trajectories
-that the racial and ethnic groups in a neighborhood have followed. Three
-methods have been adopted in the literature for this purpose: statistical curve fitting, time-series clustering, and sequence analysis. With curve-fitting models like growth mixture models or latent growth models, mathematical functions fit each racial and
+that the racial and ethnic groups in a neighborhood have followed. Two
+methods have been used for this purpose: statistical curve fitting and
+sequence analysis. With curve-fitting models like growth mixture models
+or latent growth models, mathematical functions fit each racial and
 ethnic group under study that summarize the predominant trends
-[@Zwiers2018; @HippKim2023]. Time series clustering is an unsupervised classification technique aimed at clustering continuous longitudinal data [@delmelle2025time]. Finally,in sequence analysis, neighborhoods are first grouped into similar categorical clusters at each time stamp. 
-Then, each a sequence of neighborhood categories is constructed over time. Finally, the sequences
+[@Zwiers2018; @HippKim2023]. With sequence analysis, neighborhoods are
+first grouped into similar clusters according to their racial and ethnic
+makeup using an unsupervised clustering algorithm like k-means. This is
+done for all neighborhoods and all time stamps. Then, each neighborhood
+is assigned a categorical cluster over time, and finally, the sequences
 of these clusters are grouped using a sequence alignment technique
-[@Delmelle2016; @GonzalezLeonardo2023]. 
-
-While all three approaches - curve fitting, time-series clustering, and sequence analysis aim to characterize change over time, they differ in what types of data and research questions they are best suited for. Curve fitting methods are well-suited for summarizing trends in continuous outcomes, especially when the trajectory is expected to follow a smooth or parametric form, which must be specified *a priori*. Time-series clustering also retains the continuous nature of longitudinal data, but must be performed on single variables at a time. Cross-sectional classes of trajectories can be constructed to form multivariate typologies [@delmelle2025time], however, as the number of variables increases, this becomes an arduous workflow. 
-
-Sequence analysis is oriented towards categorical trajectories that can be constructed using multiple input variables, as demonstrated in this article. The method is particularly useful in visualizing and analyzing the timing, order, and transitions between qualitatively distinct neighborhood states rather than in the smoothness of changes.
+[@Delmelle2016; @GonzalezLeonardo2023]. Both methods aim to develop a
+typology of the predominant longitudinal pathways of change for multiple
+variables at once.
 
 In this article, we explore trajectories of neighborhood racial and
 ethnic changes in the largest and one of the most diverse cities in the
@@ -295,13 +295,10 @@ print(nyc_counties)
 
 ## Basic conceptual intuition {#sec-intuition}
 
-### Categorizing Neighborhoods Using *k*-means
-
-Sequence analysis requires categorical input states. Given that neighborhood demographic and socioeconomic data is very often continuous, the first step is to transform the data into discrete categories for each year of the analysis. In this example, we opt to use a data-driven, unsupervised classification approach for this stage by applying *k*-means to cluster the racial and ethnic composition of each census tract in each decade into one of several mutually exclusive categories. This step serves as a preprocessing stage, not an analysis of changes itself. 
-
-As an alternative, for the case of racial and ethnic compositions, for example, pre-specified thresholds (e.g., >50% of a population group) could be used to define categories like "majority Black" or "majority Hispanic". This approach works well in situations where clear theoretical cutoffs exist. However, other applications involving socio-economic indicators or multivariate neighborhood characteristics may not lend themselves to clear analyst-defined cutoffs, making a data-driven approach preferable. Since the purpose of this article is illustrative, we proceed with an overview of implementing *k*-means to construct the initial discrete classes of neighborhoods from the original racial and ethnic makeup data. However, if the analyst already has theoretically grounded thresholds, they can bypass this step and proceed directly to the sequence analysis.
-
-In the context of neighborhood racial and ethnic classification, [@reibel2011neighborhood] introduced the idea of using an unsupervised
+Our analysis features two fundamental steps. The first is the *k*-means
+clustering of the census tracts to derive multidimensional classes of
+neighborhoods containing similar racial and ethnic compositions.
+[@reibel2011neighborhood] introduced the idea of using an unsupervised
 classification approach for studying neighborhood racial change as an
 alternative to the use of neighborhood diversity indices. The objective
 of the *k*-means algorithm is to group observations in such a way that
@@ -310,9 +307,8 @@ maximizing the dissimilarity between each cluster. In other words, the
 goal is to group neighborhoods so that those most similar to each other
 according to their racial and ethnic makeup are assigned to the same
 cluster and the clusters themselves are distinct from one another in
-terms of their makeup. 
-
-With the *k*-means algorithm, the number of clusters, *k* must be determined *a priori*. To make this determination,
+terms of their makeup. With the *k*-means algorithm, the number of
+clusters, *k* must be determined *a priori*. To make this determination,
 it is customary to evaluate multiple solutions using various fit
 statistics in conjunction with domain and geographic knowledge of the
 data [@delmelle2015five]. It is also commonly recommended that input
@@ -329,35 +325,49 @@ clustering for all years at once. New neighborhood typologies may emerge
 over time with this approach. In that instance, only tracts from the
 later years would be assigned to the new cluster.
 
-### Identifying pathways of change using sequence analysis
-
 Like *k*-means, sequence analysis is an unsupervised classification
-technique but instead of grouping observations based on cross-sectional similarity, it clusters them based on the similarity of longitudinal categorical sequences. A central component of sequence analysis is defining how similar or dissimilar two sequences are. There are multiple methods to compute sequence dissimilarity. [@studer2016matters] provides a comprehensive overview of various techniques for determining sequences dissimilarity for social science
-applications. 
-
-In this case study, our goal is to group neighborhoods that follow similar racial and ethnic change trajectories, specifically in which order of categories traverse through. This gives us an overview of the various pathways of change neighborhoods may take. For example sequences that progress from a majority White composition to Mixed Race and eventually to majority Hispanic may represent one frequent change pathway. Because our sequences are measured at fixed intervals (every decade from 1980 to 2020), and each neighborhood has the same number of observations, we are less concerned with irregular timing or duration, which are often central considerations in life-course studies. 
-
-To prioritize this kind of ordered similarity, we use OMstrans, a variation of the popular Optimal Matching (OM) algorithm [@delmelle2017differentiating]. OM treats sequences as strings and calculates the 'edit distance', or minimal cost to transform one sequence into another using insertions, deletions, and substitutions. In OMstrans, the algorithm operations not on the raw states, but on the transitions between states by merging eaech state in a sequence with its predecessor. This approach emphasizes how one state leads into another and helps preserve the sequencing of change.  
-
-For example, one neighborhood may have a
+technique that aims to cluster similar longitudinal sequences. To
+determine the similarity of the sequences, a key step in this analysis
+is to create the dissimilarity measure. There are various approaches
+that can be used to determine the similarity of categorical sequences.
+[@studer2016matters] provides a comprehensive overview of various
+techniques for determining sequences dissimilarity for social science
+applications. In this case study, we are most interested in the
+*ordering* or *sequencing* of neighborhood cross-sectional racial
+groups. Each neighborhood will have the same number of states, captured
+at the same decennial interval, which differs from studies of
+individuals progressing through a series of life course events, for
+example. In those cases, other considerations like the duration of time
+spent in each state or the timing of certain events may matter more in
+ultimately grouping the sequences based on similarity. Here we aim to
+create clusters of sequences that follow a similar ordering of events -
+progressing from example, a Majority White neighborhood through a Mixed
+Race state towards a Majority Hispanic state. The amount of time spent
+in each of these states might differ, but ultimately this describes
+*how* a neighborhood has changed over time. Given this, we follow
+[@delmelle2017differentiating] and use a variation on the popular
+Optimal Matching (OM) algorithm called OMstrans. The OM algorithm is a
+string editing technique that determines the cost it would take to
+completely transform one sequence into another. This is achieved by
+either inserting, deleting, or substituting elements in one sequence
+until it matches another. For example, one neighborhood may have a
 sequence of *White*, *White*, *Mixed Race*, *Hispanic* while another
 neighborhood might follow the sequence *White*, *White*, *Mixed Race*,
 *Mixed Race*. Between these two strings, there is one entry that
 differs: the final state. To transform one to another, we could
 substitute *Hispanic* for *Mixed Race* in the second sequence, and the
 dissimilarity of the two sequences would be equal to the cost of that
-substitution. 
-
-In the OMstrans variant, distances between sequences of
+substitution. In the OMstrans variant, distances between sequences of
 transitions are computed. This means that each state is merged with its
 previous state to create a subsequence. In the previous illustrative
 example, the first sequence becomes (*White-White*, *White-MixedRace*,
 *MixedRace-Hispanic*) and the OM cost evaluation is then applied to
-these subsequences. 
-
-The OMstrans approach allows us to incorporate empirical transition probabilities into the substitution cost matrix. In this way, frequent transitions (e.g., *White* to *Mixed*) are penalized less than rare ones. Insertions and deletions can be discoraged by assigning a higher cost than the empirical transitions so that disruptions to the temporal alignment of sequences is discouraged. The balance between preserving state similarity and order is further governed by the parameter *w*, the origin-transition parameter. When *w* = 1, OMstrans approximates the
+these subsequences. This helps to ensure that the ordering of events is
+preserved in the sequence clusters. The importance given to the
+preservation of ordering is governed by the parameter *w*, the
+origin-transition parameter. When *w* = 1, OMstrans approximates the
 traditional OM algorithm. A lower value places greater emphasis on the
-ordering or sequencing of events than on the specific states themselves.
+ordering or sequencing of events.
 
 ## Application {#sec-application}
 
@@ -404,35 +414,31 @@ nyc_counties <- nyc_counties %>%
 #you can mask water area if you would like.
 #nyc_counties <- nyc_counties %>%  erase_water(area_threshold = 0.9)
 
+# Create the large map for the state without a scale bar
 zoomed_map <- ggplot() +
-  geom_sf(data = ny_counties, fill = "gray85", color = "white", size = 1) +
-  geom_sf(data = nyc_counties, fill = "#85B0A9", color = "white", size = 3) +
+  geom_sf(data = ny_counties, fill = "gray85", color = "white", size = 1) + # New York State outline
+  geom_sf(data = nyc_counties, fill = "#85B0A9", color = "white", size = 3) + # NYC counties in teal
   geom_segment(aes(x = -73.98, y = 40.775, xend = -74.03, yend = 40.775), 
-               color = "gray25", size = 0.5) +
+               color = "gray25", size = 0.5) + # Line from New York label to the boundary
   geom_text(data = nyc_counties, aes(x = X, y = Y, label = label_main), 
-            color = "black", size = 4, family = "Arial", fontface = "bold") +
+            color = "black", size = 4, family = "Arial", fontface = "bold") + # Add main county names
   geom_text(data = nyc_counties, aes(x = X, y = Y - 0.02, label = label_paren), 
-            color = "gray25", size = 3.75, family = "Arial") +
+            color = "gray25", size = 3.75, family = "Arial") + # Add parentheses labels in lighter color
   geom_text(aes(x = -73.6, y = 40.725, label = "Nassau"), 
-            color = "gray55", size = 4, family = "Arial", fontface = "bold") +
+            color = "gray55", size = 4, family = "Arial", fontface = "bold") + # Corrected Nassau label position
   geom_text(aes(x = -73.8, y = 40.98, label = "Westchester"), 
-            color = "gray55", size = 4, family = "Arial", fontface = "bold") +
+            color = "gray55", size = 4, family = "Arial", fontface = "bold") + # Corrected Westchester label
   geom_text(aes(x = -73.6, y = 40.705, label = "(Long Island)"), 
-            color = "gray70", size = 3.5, family = "Arial", fontface = "bold") +
-  annotation_scale(location = "bl", width_hint = 0.18, 
-                   text_cex = .9,
-                   bar_cols = c("gray75", "white"),
-                   style = "bar",
-                   unit_label = "km") +
-  coord_sf(xlim = c(-74.25, -73.5), ylim = c(40.4, 41.05), expand = FALSE) +
+            color = "gray70", size = 3.5, family = "Arial", fontface = "bold") + # Add Long Island label below Nassau
+  coord_sf(xlim = c(-74.25, -73.5), ylim = c(40.4, 41.05), expand = FALSE) + # Crop to focus on NYC
   theme_minimal() +
   theme(
-    panel.grid.major = element_blank(),
-    panel.grid.minor = element_blank(),
-    axis.title = element_blank(),
-    axis.text = element_blank(),
-    legend.position = "none",
-    plot.margin = margin(0, 0, 0, 0)
+    panel.grid.major = element_blank(), # Remove major grid lines
+    panel.grid.minor = element_blank(), # Remove minor grid lines
+    axis.title = element_blank(), # Remove axis titles
+    axis.text = element_blank(), # Remove axis text (labels)
+    legend.position = "none", # Remove the legend
+    plot.margin = margin(0, 0, 0, 0) # Remove margins for a tighter crop
   )
 
 # Create the large map for NY and surrounding counties with text annotation
@@ -593,26 +599,11 @@ cluster_profiles_long <- cluster_profiles %>%
   pivot_longer(cols = c("white", "black", "hisp", "asian"), 
                names_to = "Demographic", values_to = "Proportion")
 
-
 # Create the stacked bar chart
 ggplot(cluster_profiles_long, aes(x = factor(cluster), y = Proportion, fill = Demographic)) +
   geom_bar(stat = "identity") +
   labs(title = "Cluster Demographic Makeup - 3 clusters", x = "Cluster", y = "Proportion") +
-  scale_fill_manual(
-  values = c(
-    "white" = "#F0E442",     # yellow
-    "black" = "#0072B2",     # blue
-    "hisp"  = "#D55E00",     # orange/red
-    "asian" = "#CC79A7"      # magenta
-  ),
-  labels = c(
-    "white" = "White",
-    "black" = "Black",
-    "hisp" = "Hispanic",
-    "asian" = "Asian"
-  ),
-  name = "Demographic Group"
-) +  # Adjust color palette if desired
+  scale_fill_brewer(palette = "Set3") +  # Adjust color palette if desired
   theme_minimal()
 ```
 
@@ -682,7 +673,7 @@ label_clusters <- function(cluster_profiles) {
         black > 0.75 ~ "1 Black",
         asian > 0.45 ~ "5 Asian",
         white < 0.56 & hisp > 0.20 & black < 0.20 ~ "4 Mixed",
-        black > 0.49 & hisp > 0.25 & white < 0.15 ~ "6 Black & Hispanic",
+        black > 0.49 & hisp > 0.25 & white < 0.15 ~ "6 Black and Hispanic",
         TRUE ~ "Other"  # Default label if none of the conditions are met
       )
     )
@@ -724,33 +715,18 @@ cluster_profiles_long <- cluster_profiles_combined %>%
 # Plot stacked bar charts of demographic makeup for each labeled cluster
 ggplot(cluster_profiles_long, aes(x = label, y = Proportion, fill = Demographic)) +
   geom_bar(stat = "identity", position = "stack") +
-  facet_grid(Clustering_Solution ~ ., scales = "free_x") +
+  facet_grid(Clustering_Solution ~ ., scales = "free_x") +  # Facet vertically by clustering solution
   scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
-  scale_fill_manual(
-    values = c(
-      "white" = "#F0E442",     # yellow
-      "black" = "#0072B2",     # blue
-      "hisp"  = "#D55E00",     # red/orange
-      "asian" = "#CC79A7"      # magenta
-    ),
-    labels = c(
-      "white" = "White",
-      "black" = "Black",
-      "hisp" = "Hispanic",
-      "asian" = "Asian"
-    ),
-    name = "Demographic Group"
-  ) +
   labs(
-    title = "Demographic Makeup of Labeled Clusters (4, 5, and 6 Clusters)",
+    title = "",
     x = "Cluster Label",
-    y = "Proportion of Demographic Group"
+    y = "Proportion of Demographic Group",
+    fill = "Demographic Group"
   ) +
   theme_minimal() +
   theme(
     axis.text.x = element_text(angle = 45, hjust = 1),
-    plot.title = element_text(hjust = 0.5, size = 13, face = "bold"),
-    strip.text.y = element_text(angle = 0)
+    plot.title = element_text(hjust = 0.5)
   )
 ```
 
@@ -809,36 +785,28 @@ tract_clusters_2020 <- tract %>% erase_water(area_threshold = 0.9) %>%
                                   "cluster_6" = "6 Clusters")) %>%
   mutate(ClusterSolution = factor(ClusterSolution, levels = c("4 Clusters", "5 Clusters", "6 Clusters")))
 
-
-
+# Create the base plot with the labeled clusters
 base_plot <- ggplot(tract_clusters_2020) +
-  geom_sf(aes(fill = Label), color = NA) +
-  geom_sf(data = nyc_counties, fill = NA, color = "black", size = 0.5) +
-  facet_wrap(~ ClusterSolution, nrow = 1, strip.position = "bottom") +
+  geom_sf(aes(fill = Label), color = NA) +  # Use the Label field for fill
+  geom_sf(data = nyc_counties, fill = NA, color = "black", size = 0.5) +  # Add county outlines
+  facet_wrap(~ ClusterSolution, nrow = 1) +  # Facet horizontally by clustering solution
   scale_fill_manual(
     values = c("3 White" = "#F0E442", "2 Hispanic" = "#D55E00", 
                "1 Black" = "#0072B2", "5 Asian" = "#CC79A7", 
                "4 Mixed" = "#009E73", "6 Black and Hispanic" = "#56B4E9"),
-    labels = c("Black", "Hispanic", "White", "Asian", "Mixed", "Black & Hispanic")
+    labels = c("Black", "Hispanic", "White", "Asian", "Mixed", "Black and Hispanic")  # Remove numbers from labels
   ) +
-  labs(
-    title = "Racial Cluster Maps by Number of Groups",
-    x = "", y = "", fill = NULL
-  ) +
+  labs(x = "", y = "", fill = NULL) +  # Remove the title and set fill to NULL to remove "Label"
   theme_void() +
   theme(
-    plot.title = element_text(hjust = 0.5, face = "bold", size = 14),
-    strip.background = element_blank(),
-    strip.placement = "outside",
-    strip.text = element_text(size = 12, face = "italic", color = "gray20"),
-    legend.position = "bottom",
-    legend.title = element_blank(),
-    legend.text = element_text(size = 8),
-    legend.key.width = unit(1.2, "cm"),
-    legend.key.height = unit(0.4, "cm")
+    strip.text = element_text(hjust = .5, vjust = .1, face = "italic", size = 12),  # Center facet labels
+    legend.position = "bottom",  # Place the legend at the bottom
+    legend.title = element_blank(),  # Ensure legend title is blank
+    legend.text = element_text(size = 8)
   ) +
-  guides(fill = guide_legend(nrow = 1, byrow = TRUE, label.position = "bottom"))
+  guides(fill = guide_legend(nrow = 1, byrow = TRUE, label.position = "bottom"))  # Place category names under the boxes
 
+# Display the plot
 grid.arrange(base_plot)
 ```
 
@@ -870,51 +838,32 @@ tract_clusters_decades <- tract %>%
 tract_clusters_decades <- tract_clusters_decades %>%
   mutate(year = factor(year, levels = decades))
 
+# Plot faceted maps for each decade (year)
 ggplot(tract_clusters_decades) +
-  geom_sf(aes(fill = label_6), color = NA) +
-  geom_sf(data = nyc_counties, fill = NA, color = "black", size = 0.5) +
-  facet_wrap(~ year, ncol = 5, strip.position = "bottom") +
-theme_void() +
-theme(
-  plot.title = element_text(hjust = 0.5, face = "bold", size = 14),
-  strip.background = element_blank(),
-  strip.text = element_text(size = 11, face = "italic", color = "gray20"),
-  strip.placement = "outside",
-  legend.position = "bottom",
-  legend.direction = "horizontal",
-  legend.title = element_blank(),
-  legend.text = element_text(size = 9),
-  legend.key.width = unit(1.2, "cm"),
-  legend.key.height = unit(0.5, "cm")
-) +
+  geom_sf(aes(fill = label_6), color = NA) +  # Use factor to ensure proper color assignment
+  geom_sf(data = nyc_counties, fill = NA, color = "black", size = 0.5) +  # Add county outlines
+  facet_wrap(~ year, ncol = 5) +  # Facet by year with 5 columns
   scale_fill_manual(
-    values = c(
-      "3 White" = "#F0E442",
-      "2 Hispanic" = "#D55E00",
-      "1 Black" = "#0072B2",
-      "5 Asian" = "#CC79A7",
-      "4 Mixed" = "#009E73",
-      "6 Black & Hispanic" = "#56B4E9"
-    ),
-    labels = c("Black", "Hispanic", "White", "Asian", "Mixed", "Black & Hispanic"),
-    name = ""
+    values = c("3 White" = "#F0E442", "2 Hispanic" = "#D55E00", "1 Black" = "#0072B2",
+               "5 Asian" = "#CC79A7", "4 Mixed" = "#009E73", "6 Black and Hispanic" = "#56B4E9"),
+    labels = c("Black", "Hispanic", "White", "Asian", "Mixed", "Black and Hispanic"),  # Remove numbers from labels
+    name = ""  # Remove legend title
   ) +
-  labs(
-    title = "Racial Cluster Maps by Decade (1980–2020)",
-    x = "", y = ""
-  ) +
+  labs(title = " ", x = "", y = "") +
   theme_void() +
   theme(
-    plot.title = element_text(hjust = 0.5, face = "bold", size = 14),
-    legend.position = "bottom",
-    legend.direction = "horizontal",
-    legend.title = element_blank(),
-    legend.text = element_text(size = 9),
-    legend.key.width = unit(1.2, "cm"),
-    legend.key.height = unit(0.5, "cm")
+    plot.title = element_text(hjust = 0, color = "gray"),  # Set the title color to gray
+    legend.position = "bottom",  # Move legend to the bottom
+    legend.direction = "horizontal",  # Make the legend horizontal
+    legend.title = element_blank(),  # Ensure the legend title is blank
+    legend.key.size = unit(0.6, "cm"),  # Set consistent size for legend boxes
+    legend.key.height = unit(0.6, "cm"),  # Set consistent height for legend boxes
+    legend.key.width = unit(0.5, "cm")  # Set consistent width for legend boxes
   ) +
   guides(
-    fill = guide_legend(nrow = 1, byrow = TRUE, label.position = "bottom")
+    fill = guide_legend(
+      nrow = 1, byrow = TRUE, label.position = "bottom"  # Place category names under the legend boxes
+    )
   )
 ```
 
@@ -932,9 +881,7 @@ in the dataset and 197 unique sequences; all sequences are displayed in
 the plot below. Thus, the purpose of clustering the sequences is to
 extract the general patterns present from the set of all sequences.
 
-
 ```{r createsequences, warning=FALSE, cache=TRUE, message=FALSE, fig.cap="Sequence of each neighborhood."}
-
 # Convert the data from long to wide format to have a sequence for each neighborhood
 # Assuming census_long is your data frame
 census_wide <- tract_clusters_decades %>%
@@ -985,10 +932,7 @@ seqIplot(sequence_data,                                             # Sequence o
          with.legend = "right",                                # Display legend on right side of plot
          cex.legend = 0.6,                                     # Change size of legend
          main = "Neighborhood Racial and Ethnic Trajectories") # Plot title
-
 ```
-
-
 
 The next objective is to compute the dissimilarity between all
 sequences. As described previously, we use the OMstrans algorithm to
@@ -999,8 +943,6 @@ the origin-transition trade-off weight. This emphasizes the ordering of
 sequence states. We also set a high `indel` cost of `3`. Finally,
 substitution costs are a function of the transition rate `TRATE` between
 states. This places a lower cost on more frequent transitions.
-
-The substitution cost matrix is shown in the Table below. The table indicates that more frequent transitions from, for example, Black & Hispanic to Black, Mixed to White, White to Mixed, and Black to Black and Hispanic have lower costs than rarer transitions from, for example, Asian to Black, Hispanic to Black, or Black to Asian. Generally, the more mixed race groups are more transitional white the majority race groups tend to transition through a mixed race state. This will become more evident as we examine the resulting sequence clusters. 
 
 Once the cost matrix is established, we then cluster the sequences using
 the dissimilarity matrix as an input to generate the typology. We follow
@@ -1022,20 +964,20 @@ belonging to each cluster and the sequence bars are scaled to visualize
 the frequency of each sequence. A summary of the trajectories is as
 follows:
 
-1.  Hispanic Majority to Black & Hispanic
+1.  Hispanic Majority to Black and Hispanic
 2.  Stability Cluster
-3.  White & Mixed Race to Hispanic Majority
-4.  White to White & Mixed Race to Hispanic Majority
-5.  Black & Hispanic to Hispanic Majority
-6.  White Majority to White & Mixed Race
-7.  White & Mixed Race to Black & Hispanic
-8.  Black & Hispanic to Black Majority
-9.  White & Mixed Race to Asian Majority
-10. White & Mixed Race to White Majority
-11. Black & Hispanic to White & Mixed Race
-12. White & Mixed Race to Asian Majority
-13. Black Majority to Black & Hispanic
-14. Black & Hispanic to Asian Majority
+3.  White and Mixed Race to Hispanic Majority
+4.  White to White and Mixed Race to Hispanic Majority
+5.  Black and Hispanic to Hispanic Majority
+6.  White Majority to White and Mixed Race
+7.  White and Mixed Race to Black and Hispanic
+8.  Black and Hispanic to Black Majority
+9.  White and Mixed Race to Asian Majority
+10. White and Mixed Race to White Majority
+11. Black and Hispanic to White and Mixed Race
+12. White and Mixed Race to Asian Majority
+13. Black Majority to Black and Hispanic
+14. Black and Hispanic to Asian Majority
 
 ```{r clustersequences, warning=FALSE, cache=TRUE, message=FALSE}
 # Pass this palette to seqdef
@@ -1046,23 +988,6 @@ sequence_data <- seqdef(census_wide[, -1], cpal = custom_palette)  # Exclude the
 costs <- seqcost(sequence_data, method = "TRATE")
 om_distances <- seqdist(sequence_data, method = "OMstran", indel = 3, sm = costs$sm, otto = 0.1)
 
-#Extract the substitution cost matrix
-sub_matrix <- round(costs$sm, 2)  # round to 2 decimal places for clarity
-
-# Convert to a data frame for export
-sub_df <- as.data.frame(sub_matrix)
-
-# Add row names as a column for better display
-sub_df$From <- rownames(sub_df)
-sub_df <- sub_df[, c("From", setdiff(names(sub_df), "From"))]
-
-# Optional: reorder columns to match row order
-sub_df <- sub_df[, c("From", rownames(sub_matrix))]
-
-# Print to console
-print(sub_df)
-
-
 # Perform hierarchical clustering using Ward's method on the OM distances
 clusterward <- agnes(om_distances, diss = TRUE, method = "ward")
 
@@ -1071,50 +996,36 @@ num_clusters <- 14
 clusters <- cutree(clusterward, k = num_clusters)
 census_wide$sequence_cluster <- clusters
 
-
-
-# Define all 14 cluster names
-cluster_names_full <- c(
-  "Hispanic Majority to Black & Hispanic",
-  "Stability Cluster", 
-  "White & Mixed Race to Hispanic Majority",
-  "White to White & Mixed Race to Hispanic Majority",
-  "Black & Hispanic to Hispanic Majority",
-  "White Majority to White & Mixed Race",
-  "White & Mixed Race to Black & Hispanic",
-  "Black & Hispanic to Black Majority",
-  "White & Mixed Race to Asian Majority",
-  "White & Mixed Race to White Majority",
-  "Black & Hispanic to White & Mixed Race",
-  "White & Mixed Race to Asian Majority",
-  "Black Majority to Black & Hispanic",
-  "Black & Hispanic to Asian Majority"
+# Define cluster names for reference
+cluster_names1 <- c(
+  "1 Black & Hispanic to Hispanic Majority", 
+  "2 Stability", 
+  "3 White Mixed Race to Hispanic", 
+  "4 White to Mixed Race to Hispanic Majority", 
+  "5 Majority White to Increasing Diversity"
 )
 
-# Modified function that creates separate plots for each cluster in the range
+# Plot sequences for clusters in groups, adjusting legend settings
 plot_sequence_clusters <- function(cluster_range) {
-  for(i in cluster_range) {
-    seqfplot(
-      sequence_data[census_wide$sequence_cluster == i, ], 
-      sortv = "from.start", 
-      border = NA, 
-      with.legend = "right",
-      legend.prop = 0.2,
-      legend.border = FALSE,
-      main = paste("Cluster", i, ":", cluster_names_full[i]),
-      cex.legend = 0.6  # Adjust this value: smaller = smaller text, larger = larger text
-    )
-  }
+  seqfplot(
+    sequence_data[census_wide$sequence_cluster %in% cluster_range, ], 
+    group = census_wide$sequence_cluster[census_wide$sequence_cluster %in% cluster_range], 
+    sortv = "from.start", 
+    border = NA, 
+    with.legend = "right",         # Place the legend on the right
+    legend.prop = 0.2,             # Set the proportion of the plot area for the legend
+    legend.border = FALSE          # Remove the border around the legend
+  )
 }
 
-# Keep your existing calls - each will now create clean individual plots
-plot_sequence_clusters(1:2)    # Creates 2 separate plots with individual titles
-plot_sequence_clusters(3:4)    # Creates 2 separate plots with individual titles
-plot_sequence_clusters(5:6)    # Creates 2 separate plots with individual titles
-plot_sequence_clusters(7:8)    # Creates 2 separate plots with individual titles
-plot_sequence_clusters(9:10)   # Creates 2 separate plots with individual titles
-plot_sequence_clusters(11:12)  # Creates 2 separate plots with individual titles
-plot_sequence_clusters(13:14)  # Creates 2 separate plots with individual titles
+# Plot sequences for specified cluster ranges
+plot_sequence_clusters(1:2)
+plot_sequence_clusters(3:4)
+plot_sequence_clusters(5:6)
+plot_sequence_clusters(7:8)
+plot_sequence_clusters(9:10)
+plot_sequence_clusters(11:12)
+plot_sequence_clusters(13:14)
 ```
 
 Of these 14 pathways, there are 3 that lead to the formation of a
@@ -1340,8 +1251,9 @@ increase in the share of Whites, saw a notable increase in the
 transition from Black and Hispanic to White and mixed race over the past
 two decades. Neighborhoods that increased in the share of Blacks largely
 transitioned from Black and Hispanic to majority Black or from White and
-mixed race to Black and Hispanic. 
-
-The strength of the sequence analysis technique lies in its ability to clearly visualize common pathways of neighborhood change. One of its limitations, however, is the need to segment continuous, longitudinal data into discrete, categorical states. In this article, we devoted attention to this step, illustrating the use of a *k*-means algorithm as an unsupervised classification method for grouping multiple variables. This phase involves decisions, particularly, the number of classes, as that directly influences the resulting sequences and subsequent interpretations. Alternative methods for clustering time series data that preserve the continuous nature of the data may be preferable in cases where the number of neighborhood variables is limited [@delmelle2025time].
-
-Beyond describing trajectories, sequence analysis also opens up avenues for further inquiry. The resulting sequence clusters can serve as the basis for additional analyses like modeling the predictors of specific trajectories or analyzing their spatial patterns using categorical spatial autocorrelation measures such as the join-count statistic.
+mixed race to Black and Hispanic. The benefits of the sequence analysis
+technique is in the clarity of the visuals for revealing common pathways
+of change. One of its drawbacks is that it requires segmenting
+continuous, longitudinal data into discrete, categorical groups. Other
+methods for clustering time series offer an alternative approach for
+visualizing trajectories over time.
