@@ -19,6 +19,9 @@ format:
     code-overflow: wrap
     toc: true
     code-fold: true 
+
 execute:
   echo: true
   cache: false
+
+crossref: false

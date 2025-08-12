@@ -9,10 +9,10 @@ author:
     email: delmelle@upenn.edu
   - name: Eric Delmelle
     affiliations:
-      - name: Lehigh University & Vrije Universiteit Brussels
+      - name: Lehigh University and Vrije Universiteit Brussels
     orcid: 0000-0002-5117-2238
     email: delmelle@gmail.com
-date: "2025-07-23"
+date: "2025-08-08"
 abstract: |
   This paper demonstrates the application of sequence analysis to develop a typology of racial and ethnic trajectories in New York City neighborhoods from 1980 to 2020 using a reproducible R workflow. Our workflow begins with using an unsupervised classification method, k-means, at each decennial cross-section to derive 6 classes describing the racial and ethnic makeup of neighborhoods during the study period. These classes include four that depict a majority of Black, White, Hispanic, and Asian residents, and two mixed-race classes, Black and Hispanic, and a White majority with a mixture of other races. We then develop a sequence of classes for each census tract over the 5 decennial time stamps. Finally, we derive a longitudinal typology describing the predominant pathways of change using sequence analysis. This resulted in 14 distinct pathways including transitions to Hispanic and Asian majorities emerging from historically White or Black neighborhoods. The findings underscore the gradual nature of neighborhood racial transformations. Our approach is reproducible for researchers wanting to explore and visualize multidimensional neighborhood dynamics.
 keywords: [sequence analysis, neighborhood change, New York City]
@@ -277,7 +277,7 @@ tract<- rename(tract, TRTID10 = GEOID)
 tract$TRTID10<- as.double(tract$TRTID10)
 ```
 
-```{r extract county boundaries, warning=FALSE, cache = TRUE, message=FALSE}
+```{r extract_county_boundaries, warning=FALSE, cache = TRUE, message=FALSE}
 # Set tigris options to return the data in sf format (spatial data frame)
 options(tigris_class = "sf")
 
@@ -366,7 +366,7 @@ ordering or sequencing of events than on the specific states themselves.
 Our study area consists of census tracts within the five Boroughs of New
 York (see Figure below for an overview map).
 
-```{r visualize-area, warning=FALSE, cache=TRUE, message=FALSE, fig.cap="Overview map of New York City's five boroughs and surrounding counties", fig.width=10, fig.height=8}
+```{r visualize-area, warning=FALSE, cache=TRUE, message=FALSE, fig.cap="Overview map of New York City five boroughs and surrounding counties", fig.width=10, fig.height=8}
 
 # Filter for only the New York City counties
 nyc_counties <- ny_counties %>%
@@ -1268,7 +1268,7 @@ ggplot(tract_increasing_white) +
         legend.box = "vertical")  # Place legend title on top
 ```
 
-```{r Black Pathways, fig.cap="Neighborhoods Following Pathway to Black Majority", echo=FALSE, warning=FALSE, message=FALSE}
+```{r Black_Pathways, fig.cap="Neighborhoods Following Pathway to Black Majority", echo=FALSE, warning=FALSE, message=FALSE}
 # Create the map for Increasing Black, zoomed in on the five boroughs
 ggplot(tract_increasing_black) +
   geom_sf(aes(fill = factor(sequence_cluster)), color = NA) +  # Map sequence clusters
@@ -1325,7 +1325,7 @@ consistent set of groupings. We then created sequences of neighborhood
 clusters over the study period and developed a typology of sequences
 that grouped them based on the similarity of how they changed over time.
 To do so, we used the OMtrans algorithm for computing sequence
-dissimilarity to ensure that the \*ordering or sequencing of events was
+dissimilarity to ensure that the ordering or sequencing of events was
 preserved. Finally, we mapped sequence clusters to spatially visualize
 neighborhoods that followed similar pathways of change. For our case
 study of the largest city in the United States, and one of the most
